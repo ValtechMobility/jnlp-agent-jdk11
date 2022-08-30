@@ -1,3 +1,7 @@
-FROM jenkins/jnlp-agent-jdk11:latest
+FROM jenkins/inbound-agent:latest-jdk11
+
+RUN apt update && apt upgrade
 
 RUN apt install unzip
+
+USER jenkins
