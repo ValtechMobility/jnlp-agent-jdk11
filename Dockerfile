@@ -1,7 +1,24 @@
-FROM jenkins/inbound-agent:latest-jdk11
+FROM jenkins/inbound-agent:alpine as jnlp
 
-RUN apt update && apt upgrade
+FROM jenkins/agent:latest-jdk11
 
-RUN apt install unzip
+ARG version
+LABEL Description="This is a base image, which allows connecting Jenkins agents via JNLP protocols" Vendor="Jenkins project" Version="$version"
 
-USER jenkins
+ARG user=jenkins
+
+USER root
+
+COPY --from=jnlp /usr/local/bin/jenkins-agent /usr/local/bin/jenkins-agent
+COPY --from=jnlp /usr/share/jenkins/agent.jar /usr/share/jenkins/agent.jar
+
+RUN chmod +x /usr/local/bin/jenkins-agent &&\
+    ln -s /usr/local/bin/jenkins-agent /usr/local/bin/jenkins-slave
+
+RUN apt-get update \
+  && apt-get -y install \
+    unzip
+
+USER ${user}
+
+ENTRYPOINT ["/usr/local/bin/jenkins-agent"]
