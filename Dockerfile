@@ -17,7 +17,8 @@ RUN chmod +x /usr/local/bin/jenkins-agent &&\
 
 RUN apt-get update \
   && apt-get -y install \
-    unzip
+    unzip \
+    curl
 
 USER ${user}
 
