@@ -18,7 +18,8 @@ RUN apt-get update \
   && apt-get -y install \
     unzip \
     curl \
-    rsync
+    rsync \
+    openssh-client
 
 USER ${user}
 
